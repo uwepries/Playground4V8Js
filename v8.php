@@ -12,6 +12,10 @@ $v8->sprintf = function ($string) {
 
 $v8->query = function($query) use ($mysqli) {
     $res = $mysqli->query($query);
+	if ($res === true || $res === false) {
+		return $res;		
+	}
+
     $data = array();
 
     while ($row = $res->fetch_assoc()) {

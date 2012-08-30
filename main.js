@@ -34,3 +34,4 @@ var rows = PHP.query('select * from groups');
 for (var i = 0, row; row = rows[i]; i++) {
     print('Group #' + row.id + ': ' + row.name + ' (' + row.description + ')\n');
 }
+
