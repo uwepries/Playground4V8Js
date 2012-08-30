@@ -1,34 +1,23 @@
 <?php
 
-$mysqli = new mysqli("localhost", "bikini", "bikini", "bikini");
+$extensions = array();
+$dir = new DirectoryIterator(__DIR__ . '/ext/js/');
+foreach ($dir as $file) {
+	if ($file->isDot()) {
+		continue;
+	}
 
-V8Js::registerExtension('function', file_get_contents('function.js'));
-V8Js::registerExtension('string', file_get_contents('string.js'));
+	$extensions[] = $extension = $file->getBasename('.js');
+	V8Js::registerExtension($extension, file_get_contents($file->getPathname()));
+}
 
-$v8 = new V8Js('PHP', array(), array('function', 'string'));
+$v8 = new V8Js('global', array(), $extensions);
+
+require __DIR__ . '/ext/php/DB.php';
+$v8->db = new DB("localhost", "bikini", "bikini", "bikini");
 
 $v8->sprintf = function($string) {
     return call_user_func_array('sprintf', func_get_args());
 };
 
-$v8->query = function($query) use ($mysqli) {
-    $res = $mysqli->query($query);
-	if ($res === true || $res === false) {
-		return $res;		
-	}
-
-    $data = array();
-
-    while ($row = $res->fetch_assoc()) {
-        $data[] = $row;
-    }
-
-    return $data;
-};
-
-$v8_exec = function($path) use ($v8) {
-    return $v8->executeString(file_get_contents($path), basename($path));
-};
-
-$v8_exec('main.js');
-
+$v8->executeString(file_get_contents('main.js'), 'main.js');
