@@ -24,6 +24,7 @@ print('c as string: ' + (new String(c)) + '\n');
 print('c as value:  ' + (+c) + '\n');
 print('c as value:  ' + (+c) + '\n');
 print('c as value:  ' + (+c) + '\n');
+print('c as value:  ' + (new String(c)) + '\n');
 
 var str = 'foo %020d %.2f %s %b %o %X %c';
 print('JS\' sprintf:  ' + str.sprintf.apply(str, ['2', 1.75643, 'foo', 16, 16, 255, 65]) + '\n');
